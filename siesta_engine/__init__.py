@@ -5,6 +5,8 @@ ASE+Siesta+ML
 
 # Add imports here
 from .siesta_engine import *
+from . import calculator
+from . import scheduler
 
 # Handle versioneer
 from ._version import get_versions

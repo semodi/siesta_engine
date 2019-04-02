@@ -6,7 +6,23 @@ Unit and regression test for the siesta_engine package.
 import siesta_engine
 import pytest
 import sys
+from ase.io import read
+import os
+test_dir = os.path.dirname(os.path.abspath(__file__))
+
+os.environ['SIESTA_PP_PATH'] = os.path.join(test_dir,'siesta')
 
 def test_siesta_engine_imported():
     """Sample test, will always pass so long as import statement worked"""
     assert "siesta_engine" in sys.modules
+
+def test_fdf_creator():
+    atoms = read('water.traj','0')
+    os.chdir(os.path.join(test_dir, 'siesta'))
+    atoms.calc = \
+    siesta_engine.calculator.CustomSiesta(label='H2O',
+               xc='PW92',
+               basis_set='SZ',
+               fdf_arguments={'MaxSCFIterations': 100},
+               fdf_path = os.path.join(test_dir,'siesta','custom.fdf'))
+    atoms.get_potential_energy()
