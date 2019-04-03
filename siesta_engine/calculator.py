@@ -4,9 +4,12 @@ import os
 os.environ['SIESTA_COMMAND'] = 'siesta < ./%s > ./%s'
 class CustomSiesta(Siesta):
 
-    def __init__(self, *args, fdf_path = None, **kwargs):
+    def __init__(self, fdf_path = None, *args, **kwargs):
         self.fdf_path = fdf_path
+        if 'label' in kwargs:
+            kwargs['label'] = kwargs['label'].lower()
         super().__init__(*args, **kwargs)
+
 
     def write_input(self, atoms, properties=None, system_changes=None):
         super().write_input(atoms, properties, system_changes)
