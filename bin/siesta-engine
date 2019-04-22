@@ -1,3 +1,4 @@
+#!python
 """
 siesta_engine.py
 ASE+Siesta+ML
@@ -7,7 +8,7 @@ Handles the primary functions
 import dask
 import dask.distributed
 from dask.distributed  import Client, LocalCluster
-from .calculator import CustomSiesta
+from siesta_engine.calculator import CustomSiesta
 import sys
 import argparse
 import os

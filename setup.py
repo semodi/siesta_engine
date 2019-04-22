@@ -31,6 +31,7 @@ setup(
     cmdclass=versioneer.get_cmdclass(),
     license='BSD-3-Clause',
 
+    scripts=['./bin/siesta-engine'],
     # Which Python importable modules should be included when your package is installed
     packages=['siesta_engine', "siesta_engine.tests"],
 

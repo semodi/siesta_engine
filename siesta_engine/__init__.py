@@ -6,8 +6,6 @@ ASE+Siesta+ML
 # Add imports here
 from . import calculator
 from .calculator import CustomSiesta
-from . import scheduler
-from .siesta_engine import calculate_distributed
 # Handle versioneer
 from ._version import get_versions
 versions = get_versions()
