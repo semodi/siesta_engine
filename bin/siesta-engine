@@ -1,4 +1,4 @@
-#!python
+#!/bin/env/python3
 """
 siesta_engine.py
 ASE+Siesta+ML
@@ -62,6 +62,7 @@ if __name__ == '__main__':
     parser.add_argument('-pseudoloc', metavar='pseudoloc', type=str, nargs = '?', default='.')
     parser.add_argument('-kwargs', metavar='kwargs', type=json.loads, nargs = '?', default='{}')
     parser.add_argument('-nworkers', metavar='nworkers', type=int, nargs = '?', default=-1)
+    parser.add_argument('-siesta_mpi', metavar='siesta_mpi', type=int, nargs = '?', default=1)
     args = parser.parse_args()
 
     print('Passed kwargs: {}'.format(args.kwargs))
@@ -72,6 +73,10 @@ if __name__ == '__main__':
         fdf_path = None
     pseudo_path = os.path.abspath(args.pseudoloc)
     os.environ['SIESTA_PP_PATH'] = pseudo_path
+    if args.siesta_mpi > 1:
+        os.environ['SIESTA_COMMAND'] = 'mpirun -np {} siesta < ./%s > ./%s'.format(args.siesta_mpi)
+    else:
+        os.environ['SIESTA_COMMAND'] = 'siesta < ./%s > ./%s'
     atoms = read(args.xyz, ':')
 
     results = calculate_distributed(atoms, fdf_path, dir, args.kwargs, args.nworkers)

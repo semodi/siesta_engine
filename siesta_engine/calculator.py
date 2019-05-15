@@ -1,7 +1,10 @@
 from ase.calculators.siesta.siesta import Siesta
+from ase.calculators.calculator import Calculator, all_changes
 import shutil
 import os
-os.environ['SIESTA_COMMAND'] = 'siesta < ./%s > ./%s'
+if not 'SIESTA_COMMAND' in os.environ:
+    os.environ['SIESTA_COMMAND'] = 'siesta < ./%s > ./%s'
+
 class CustomSiesta(Siesta):
 
     def __init__(self, fdf_path = None, *args, **kwargs):
@@ -46,6 +49,30 @@ class CustomSiesta(Siesta):
             with open(filename_tmp, 'r') as tmp_file:
                 with open(filename, 'w') as ase_fdf:
                     ase_fdf.write(tmp_file.read())
+
+    def calculate(self, atoms=None, properties=['energy'],
+                  system_changes=all_changes):
+
+        if '0_NORMAL_EXIT' in os.listdir('.'):
+            Calculator.calculate(self, atoms, properties, system_changes)
+            self.write_input(self.atoms, properties, system_changes)
+            # if self.command is None:
+                # raise CalculatorSetupError(
+                    # 'Please set ${} environment variable '
+                    # .format('ASE_' + self.name.upper() + '_COMMAND') +
+                    # 'or supply the command keyword')
+            # command = self.command.replace('PREFIX', self.prefix)
+            # errorcode = subprocess.call(command, shell=True, cwd=self.directory)
+
+            # if errorcode:
+            #     raise CalculationFailed('{} in {} returned an error: {}'
+            #                             .format(self.name, self.directory,
+            #                                     errorcode))
+            self.read_results()
+        else:
+            super().calculate(atoms, properties, system_changes)
+
+
 
 def next_fdf_entry(file):
 
