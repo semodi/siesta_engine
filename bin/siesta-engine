@@ -115,7 +115,15 @@ if __name__ == '__main__':
     parser.add_argument('-nworkers', metavar='nworkers', type=int, nargs = '?', default=-1)
     parser.add_argument('-siesta_mpi', metavar='siesta_mpi', type=int, nargs = '?', default=1)
     parser.add_argument('-mbe', action='store_true', help='Do manybody expansion of enery')
+    parser.add_argument('--nxc', metavar='nxc', help='Use nxc potential', type=str, default = '', nargs='?')
+
     args = parser.parse_args()
+
+    if not args.nxc is '':
+        if args.fdf is '':
+            raise Exception('Must provide fdf file to use NXC')
+        open(args.fdf, 'a').write('\nNeuralXC {}\n'.format(args.nxc))
+
     print('Passed kwargs: {}'.format(args.kwargs))
     dir = os.path.abspath(args.workdir)
     if args.fdf:
